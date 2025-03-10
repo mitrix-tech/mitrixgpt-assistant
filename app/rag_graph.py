@@ -6,33 +6,28 @@ from langgraph.checkpoint.postgres import PostgresSaver
 from langgraph.graph import MessagesState, StateGraph, END
 from langgraph.prebuilt import ToolNode, tools_condition
 
+from helpers import pretty_print_docs
 from db import get_connection
 from vector_store import load_retriever
 
 #
 # 1) LLM + base prompt
 #
-llm = ChatOpenAI(model="gpt-4o-mini", temperature=0)
+llm = ChatOpenAI(model="gpt-4o-mini", temperature=0, max_tokens=2000)
 base_prompt = hub.pull("mitrixgpt-base")  # "As an expert in Mitrix Technology..."
 
 
-#
-# 2) Define a 'retrieve' tool just like your snippet
-#
 @tool(response_format="content_and_artifact")
 def retrieve(query: str):
     """Retrieve information from Milvus using the load_retriever function."""
-    # Load a retriever from your default Milvus collection
+
     retriever = load_retriever()
 
     if not retriever:
         return ("No vector store found. Please add documents or links first.", [])
 
-    # get_relevant_documents or .invoke for some retrievers
-    # If you're using .invoke(...) from a Runnable-based retriever:
-    # docs = retriever.invoke(query)
-    # Otherwise, if it's a standard LC retriever:
     docs = retriever.invoke(query)
+    pretty_print_docs(docs)
 
     if not docs:
         return ("No relevant documents found.", [])
@@ -54,21 +49,18 @@ def query_or_respond(state: MessagesState):
     Generate an AIMessage that may include a tool-call to 'retrieve'.
     The `MessagesState` includes the full conversation so far: user messages, LLM messages, etc.
     """
-    # We bind the LLM to the 'retrieve' tool so the model can decide whether to call it.
+
     llm_with_tools = llm.bind_tools([retrieve])
-    # Invoke LLM on the entire conversation
     prompt = f"{base_prompt}\n\n{state['messages']}"
 
     response = llm_with_tools.invoke(prompt)
-    # The 'response' is typically an AIMessage or a ToolMessage
-    # Return that as the next step
-    return {"messages": [response]}  # We add the response to the conversation
+    return {"messages": [response]}
 
 
 #
 # 4) Step 2 in the graph: The actual retrieval
 #
-tools_node = ToolNode([retrieve])  # This node will run the retrieve tool if the LLM requested it.
+tools_node = ToolNode([retrieve])
 
 
 #
@@ -77,7 +69,7 @@ tools_node = ToolNode([retrieve])  # This node will run the retrieve tool if the
 def generate(state: MessagesState):
     """
     Take whatever the LLM got from the 'retrieve' step
-    and produce a final user-visible answer using your 'mitrixgpt-base' prompt.
+    and produce a final user-visible answer using base prompt.
     """
     # 1) Gather the latest ToolMessages
     recent_tool_messages = []
@@ -92,7 +84,7 @@ def generate(state: MessagesState):
     #    The tool’s .content is the retrieved doc text; .artifact is the list of docs
     docs_content = "\n\n".join(msg.content for msg in tool_messages)
 
-    # 3) Prepare the system message: your `base_prompt` + the retrieved text
+    # 3) Prepare the system message: `base_prompt` + the retrieved text
     system_message_content = f"{base_prompt}\n\n{docs_content}"
 
     # 4) Build the conversation up to now (excluding tool messages)
@@ -147,6 +139,6 @@ def stream_chat_graph(messages: list, thread_id: str):
     """
     graph = build_chat_graph()
     config = {"configurable": {"thread_id": thread_id}}
-    # We pass the entire conversation as {"messages": messages}
+
     for step in graph.stream({"messages": messages}, stream_mode="values", config=config):
         yield step

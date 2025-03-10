@@ -71,6 +71,8 @@ def handle_user_message(chat_id: int, user_message: str):
         role = "assistant" if sender == "ai" else "user"
         messages_for_graph.append({"role": role, "content": content})
 
+    messages_for_graph = [message for message in messages_for_graph if message.get("role") == "user"][-1:]
+
     # 4) We want to pass this entire conversation to the graph
     final_answer = ""
     with st.chat_message("assistant"):

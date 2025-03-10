@@ -1,5 +1,6 @@
 import os
 
+from langchain.retrievers import ContextualCompressionRetriever
 from langchain_community.document_loaders import (
     TextLoader,
     CSVLoader,
@@ -19,7 +20,7 @@ MILVUS_URI = "tcp://localhost:19530"
 DEFAULT_COLLECTION_NAME = "mitrixdata"
 
 llm = ChatOpenAI(
-    model="gpt-4o-mini", temperature=0
+    model="gpt-4o-mini", temperature=0, max_tokens=2000
 )
 
 embeddings = OpenAIEmbeddings(model="text-embedding-3-large")
@@ -44,20 +45,19 @@ def create_collection(collection_name, documents):
 
     # Split the documents into smaller text chunks
     texts = text_splitter.split_documents(documents)
-    # persist_directory = "./persist"
 
     # Create a new Milvus collection from the text chunks
     try:
         vector_store = Milvus.from_documents(
             documents=texts,
             embedding=embeddings,
-            connection_args={"uri": MILVUS_URI},  # connect to your milvus container
+            connection_args={"uri": MILVUS_URI},
             index_params={"index_type": "FLAT", "metric_type": "COSINE"},
             collection_name=collection_name,
             auto_id=True,
             consistency_level="Strong",
             enable_dynamic_field=True,
-            # drop_old=drop_old,
+            drop_old=False,
         )
 
     except Exception as e:
@@ -78,17 +78,16 @@ def load_collection(collection_name):
     Milvus: The loaded Milvus collection.
     This function loads a previously created Milvus collection from disk.
     """
-    persist_directory = "./persist"
 
     vector_store = Milvus(
         embedding_function=embeddings,
-        connection_args={"uri": MILVUS_URI},  # connect to your milvus container
+        connection_args={"uri": MILVUS_URI},
         index_params={"index_type": "FLAT", "metric_type": "COSINE"},
         collection_name=collection_name,
         auto_id=True,
         consistency_level="Strong",
         enable_dynamic_field=True,
-        # drop_old=drop_old,
+        drop_old=False,
     )
 
     return vector_store
@@ -137,8 +136,29 @@ def load_retriever(collection_name: str = DEFAULT_COLLECTION_NAME, score_thresho
     # Create a retriever from the collection with specified search parameters
     retriever = vectordb.as_retriever(
         search_type="similarity_score_threshold",
-        search_kwargs={"score_threshold": score_threshold, "k": 3},
+        search_kwargs={"score_threshold": score_threshold, "k": 4},
     )
+
+    from langchain.retrievers.document_compressors import LLMChainFilter
+
+    _filter = LLMChainFilter.from_llm(llm)
+    retriever = ContextualCompressionRetriever(
+        base_compressor=_filter, base_retriever=retriever
+    )
+
+    # from langchain.retrievers.document_compressors import DocumentCompressorPipeline
+    # from langchain_community.document_transformers import EmbeddingsRedundantFilter
+    #
+    # redundant_filter = EmbeddingsRedundantFilter(embeddings=embeddings)
+    # relevant_filter = EmbeddingsFilter(embeddings=embeddings, similarity_threshold=0.6)
+    # pipeline_compressor = DocumentCompressorPipeline(
+    #     transformers=[redundant_filter, relevant_filter]
+    # )
+    #
+    # retriever = ContextualCompressionRetriever(
+    #     base_compressor=pipeline_compressor, base_retriever=retriever
+    # )
+
     return retriever
 
 
