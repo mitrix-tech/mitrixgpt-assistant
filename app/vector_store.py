@@ -11,21 +11,10 @@ from langchain_community.document_loaders import (
 )
 from langchain_core.documents import Document
 from langchain_milvus import Milvus
-from langchain_openai import ChatOpenAI
-from langchain_openai import OpenAIEmbeddings
-from langchain_text_splitters import RecursiveCharacterTextSplitter
 
-MILVUS_URI = "tcp://localhost:19530"
+from settings import MILVUS_URI, text_splitter, embeddings, llm
 
 DEFAULT_COLLECTION_NAME = "mitrixdata"
-
-llm = ChatOpenAI(
-    model="gpt-4o-mini", temperature=0, max_tokens=2000
-)
-
-embeddings = OpenAIEmbeddings(model="text-embedding-3-large")
-
-text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=200, add_start_index=True)
 
 
 def create_collection(collection_name, documents):
@@ -146,19 +135,6 @@ def load_retriever(collection_name: str = DEFAULT_COLLECTION_NAME, score_thresho
         base_compressor=_filter, base_retriever=retriever
     )
 
-    # from langchain.retrievers.document_compressors import DocumentCompressorPipeline
-    # from langchain_community.document_transformers import EmbeddingsRedundantFilter
-    #
-    # redundant_filter = EmbeddingsRedundantFilter(embeddings=embeddings)
-    # relevant_filter = EmbeddingsFilter(embeddings=embeddings, similarity_threshold=0.6)
-    # pipeline_compressor = DocumentCompressorPipeline(
-    #     transformers=[redundant_filter, relevant_filter]
-    # )
-    #
-    # retriever = ContextualCompressionRetriever(
-    #     base_compressor=pipeline_compressor, base_retriever=retriever
-    # )
-
     return retriever
 
 
@@ -194,4 +170,3 @@ def load_document(file_path: str) -> list[Document]:
         raise ValueError(f"Unsupported file type: {file_extension}")
 
     return loader.load()
-

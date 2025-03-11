@@ -1,20 +1,29 @@
-from langchain import hub
 from langchain_core.messages import SystemMessage
 from langchain_core.tools import tool
-from langchain_openai import ChatOpenAI
 from langgraph.checkpoint.postgres import PostgresSaver
+from langgraph.checkpoint.sqlite import SqliteSaver
 from langgraph.graph import MessagesState, StateGraph, END
 from langgraph.prebuilt import ToolNode, tools_condition
 
 from helpers import pretty_print_docs
-from db import get_connection
+from settings import DB_URI, base_prompt, llm
 from vector_store import load_retriever
+
 
 #
 # 1) LLM + base prompt
 #
-llm = ChatOpenAI(model="gpt-4o-mini", temperature=0, max_tokens=2000)
-base_prompt = hub.pull("mitrixgpt-base")  # "As an expert in Mitrix Technology..."
+
+
+def get_checkpointer():
+    from db import get_connection, is_postgres
+
+    if is_postgres(DB_URI):
+        saver = PostgresSaver(get_connection())
+    else:
+        saver = SqliteSaver(get_connection())
+    saver.setup()
+    return saver
 
 
 @tool(response_format="content_and_artifact")
@@ -121,7 +130,7 @@ def build_chat_graph():
     graph_builder.add_edge("tools", "generate")
     graph_builder.add_edge("generate", END)
 
-    saver = PostgresSaver(get_connection())
+    saver = get_checkpointer()
     # Make sure the table named 'checkpoints' is created if not exists:
     saver.setup()
 
