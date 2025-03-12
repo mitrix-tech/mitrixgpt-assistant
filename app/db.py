@@ -45,7 +45,6 @@ def create_tables():
         _create_postgres_tables()
     else:
         _create_sqlite_tables()
-    print("Tables created successfully.")
 
 
 def _create_postgres_tables():
@@ -271,15 +270,19 @@ def create_message(chat_id: int, sender: str, content: str):
     conn.close()
 
 
-def get_messages(chat_id: int):
+def get_messages(chat_id: int, limit: int = None):
     conn = get_connection()
     cur = conn.cursor()
 
+    limit_expr = ""
+    if isinstance(limit, int):
+        limit_expr = f"LIMIT {limit}"
+
     if is_postgres(DB_URI):
-        sql = "SELECT sender, content FROM messages WHERE chat_id = %s ORDER BY timestamp ASC;"
+        sql = f"SELECT m.sender, m.content from (SELECT sender, content, timestamp FROM messages WHERE chat_id = %s ORDER BY timestamp DESC {limit_expr}) m ORDER BY m.timestamp ASC;"
         cur.execute(sql, (chat_id,))
     else:
-        sql = "SELECT sender, content FROM messages WHERE chat_id = ? ORDER BY timestamp ASC;"
+        sql = f"SELECT m.sender, m.content from (SELECT sender, content, timestamp FROM messages WHERE chat_id = ? ORDER BY timestamp DESC {limit_expr}) m ORDER BY m.timestamp ASC;"
         cur.execute(sql, (chat_id,))
 
     rows = cur.fetchall()

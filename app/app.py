@@ -1,3 +1,4 @@
+import contextlib
 import os
 import time
 
@@ -67,13 +68,13 @@ def handle_user_message(chat_id: int, user_message: str):
 
     # 3) Build the list of all messages from DB for conversation context
     messages_for_graph = []
-    rows = get_messages(chat_id)
+    rows = get_messages(chat_id, limit=10)
     # rows is a list of (sender, content)
     for sender, content in rows:
         role = "assistant" if sender == "ai" else "user"
         messages_for_graph.append({"role": role, "content": content})
 
-    # messages_for_graph = [message for message in messages_for_graph if message.get("role") == "user"][-2:]
+    # messages_for_graph = [message for message in messages_for_graph if message.get("role") == "user"]
     # messages_for_graph = messages_for_graph[-2:]
 
     # 4) We want to pass this entire conversation to the graph
@@ -163,7 +164,8 @@ def add_document_to_collection(chat_id: int, file):
         create_collection(collection_name, docs)
 
     create_source(file.name, "", chat_id, source_type="document")
-    os.remove(temp_file_path)
+    with contextlib.suppress(FileNotFoundError):
+        os.remove(temp_file_path)
     st.success(f"Uploaded file: {file.name}")
 
 

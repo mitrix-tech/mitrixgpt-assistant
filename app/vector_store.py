@@ -102,7 +102,7 @@ def add_documents_to_collection(vectordb, documents):
     return vectordb
 
 
-def load_retriever(collection_name: str = DEFAULT_COLLECTION_NAME, score_threshold: float = 0.6):
+def load_retriever(collection_name: str = DEFAULT_COLLECTION_NAME, score_threshold: float = 0.65):
     """
     Create a retriever from a Milvus collection with a similarity score threshold.
 
