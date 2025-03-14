@@ -24,7 +24,7 @@ os.environ["LANGSMITH_TRACING"] = LANGSMITH_TRACING
 os.environ["LANGSMITH_ENDPOINT"] = LANGSMITH_ENDPOINT
 os.environ["LANGSMITH_PROJECT"] = LANGSMITH_PROJECT
 
-llm = ChatOpenAI(model="gpt-4o-mini", temperature=0, max_tokens=2000)
+llm = ChatOpenAI(model="gpt-4o", temperature=0, max_tokens=2500)
 base_prompt = hub.pull("mitrixgpt-base")  # "As an expert in Mitrix Technology..."
-embeddings = OpenAIEmbeddings(model="text-embedding-3-large")
+embeddings = OpenAIEmbeddings(model="text-embedding-3-small")
 text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=200, add_start_index=True)
