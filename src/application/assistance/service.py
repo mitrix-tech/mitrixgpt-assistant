@@ -52,7 +52,7 @@ class AssistantService:
         Initialize the retriever
         """
         vector_store_configurations = self.app_context.configurations.vectorStore
-        vector_store_cluster_uri = self.app_context.env_vars.DB_CLUSTER_URI
+        vector_store_cluster_uri = self.app_context.env_vars.VECTOR_DB_CLUSTER_URI
 
         db_name = vector_store_configurations.dbName
 

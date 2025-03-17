@@ -29,13 +29,13 @@ class EmbeddingGenerator:
 
         self._document_chunker = DocumentChunker(embedding=embedding)
 
-        client = QdrantClient(path="/tmp/qdrant")
+        #client = QdrantClient(path='/tmp/mitrixgpt')
         sparse_embeddings = FastEmbedSparse(model_name="Qdrant/bm25")
 
         print('configuration.vectorStore.collectionName', configuration.vectorStore.collectionName)
 
-        self._embedding_vector_store = QdrantVectorStore(
-            client=client,
+        self._embedding_vector_store = QdrantVectorStore.from_existing_collection(
+            url=app_context.env_vars.VECTOR_DB_CLUSTER_URI,
             collection_name=configuration.vectorStore.collectionName,
             embedding=embedding,
             sparse_embedding=sparse_embeddings,

@@ -67,11 +67,12 @@ class RetrieverChain(Chain):
         )
 
     def _setup_vector_search(self):
-        client = QdrantClient(path="/tmp/qdrant")
+        # client = QdrantClient(path='/tmp/mitrixgpt')
+
         sparse_embeddings = FastEmbedSparse(model_name="Qdrant/bm25")
 
-        return QdrantVectorStore(
-            client=client,
+        return QdrantVectorStore.from_existing_collection(
+            url=self.context.env_vars.VECTOR_DB_CLUSTER_URI,
             collection_name=self.configuration.collection_name,
             embedding=self.configuration.embeddings,
             sparse_embedding=sparse_embeddings,
@@ -80,36 +81,13 @@ class RetrieverChain(Chain):
             retrieval_mode=RetrievalMode.HYBRID
         )
 
-    # def _get_post_filter_pipeline(self):
-    #     if self.configuration.max_score_distance is not None:
-    #         return [
-    #             {
-    #                 "$match": {
-    #                     "score": {
-    #                         "$lte": self.configuration.max_score_distance
-    #                     }
-    #                 },
-    #             }
-    #         ]
-    #     if self.configuration.min_score_distance is not None:
-    #         return [
-    #             {
-    #                 "$match": {
-    #                     "score": {
-    #                         "$gte": self.configuration.min_score_distance
-    #                     }
-    #                 },
-    #             }
-    #         ]
-    #     return None
-
     def _call(self, inputs: Dict[str, Any], run_manager: CallbackManagerForChainRun | None = None) -> Dict[str, Any]:
         query = inputs[self.query_key]
         vector_search = self._setup_vector_search()
         result = vector_search.similarity_search(
             query,
             k=self.configuration.max_number_of_results,
-            score_threshold=0.7
+            # score_threshold=0.6
         )
         return {
             self.output_key: result

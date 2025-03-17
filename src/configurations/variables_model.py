@@ -18,9 +18,14 @@ class Variables(BaseModel):
         '/app/configurations/config.json',
         description='The path to the configuration file for the application.'
     )
-    DB_CLUSTER_URI: str = Field(
-        description='The URI for connecting to the DB cluster.'
+    VECTOR_DB_CLUSTER_URI: str = Field(
+        description='The URI for connecting to the Vector DB cluster.'
     )
+
+    DB_URI: str = Field(
+        description='The URI for connecting to the SQL chat history db.'
+    )
+
     LLM_API_KEY: str = Field(
         description='The API key for accessing the Language Model API.'
     )

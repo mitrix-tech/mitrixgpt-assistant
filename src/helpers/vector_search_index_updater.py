@@ -17,7 +17,9 @@ class VectorStoreInitializer:
     def init_collection(self) -> None:
         collection_name = self.app_context.configurations.vectorStore.collectionName
 
-        client = QdrantClient(path="/tmp/qdrant")
+        client = QdrantClient(url=self.app_context.env_vars.VECTOR_DB_CLUSTER_URI)
+        #client = QdrantClient(path='/tmp/mitrixgpt')
+
 
         configured_similarity_fn = self.app_context.configurations.vectorStore.relevanceScoreFn or Distance.COSINE
         num_dimensions = DIMENSIONS_DICT.get(self.app_context.configurations.embeddings.name,
