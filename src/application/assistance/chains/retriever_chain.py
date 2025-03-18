@@ -7,7 +7,6 @@ from langchain_core.embeddings import Embeddings
 from langchain_core.runnables import RunnableConfig
 from langchain_qdrant import FastEmbedSparse, QdrantVectorStore, RetrievalMode
 from pydantic import BaseModel, create_model
-from qdrant_client import QdrantClient
 
 from context import AppContext
 
@@ -67,8 +66,6 @@ class RetrieverChain(Chain):
         )
 
     def _setup_vector_search(self):
-        # client = QdrantClient(path='/tmp/mitrixgpt')
-
         sparse_embeddings = FastEmbedSparse(model_name="Qdrant/bm25")
 
         return QdrantVectorStore.from_existing_collection(
