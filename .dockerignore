@@ -1,0 +1,8 @@
+__pycache__
+notebooks
+storage
+venv
+.github
+.idea
+src/demo/deploy.sh
+.env

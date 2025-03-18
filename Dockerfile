@@ -1,16 +1,16 @@
-FROM python:3.11
+FROM python:3.12.3-slim
 
+ENV PORT 3000
+EXPOSE $PORT
 
-WORKDIR /code
+WORKDIR /app
 
+COPY ./src/default.configuration.json /app/configurations/config.json
+COPY requirements.txt .
+COPY ./src /app
 
-COPY ./requirements.txt /code/requirements.txt
+RUN pip install --upgrade pip
+RUN pip install -r requirements.txt
 
-
-RUN pip install --no-cache-dir --upgrade -r /code/requirements.txt
-
-
-COPY ./app /code/app
-
-
-CMD ["fastapi", "run", "app/main.py", "--port", "80"]
+ENTRYPOINT ["python", "-B", "app.py"]
+#CMD ["uvicorn", "src:app"]

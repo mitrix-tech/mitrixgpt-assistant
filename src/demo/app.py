@@ -1,3 +1,4 @@
+import contextlib
 import os
 import time
 
@@ -15,15 +16,17 @@ from db import (
     get_messages,
     create_source,
     list_sources,
-    delete_source,
+    delete_source, create_tables,
 )
-from rag_graph import stream_chat_graph
 from vector_store import (
     create_collection,
     load_collection,
     add_documents_to_collection,
     DEFAULT_COLLECTION_NAME, load_document
 )
+
+
+from rag_graph import stream_chat_graph
 
 
 # ========== UI Helpers ==========
@@ -65,13 +68,14 @@ def handle_user_message(chat_id: int, user_message: str):
 
     # 3) Build the list of all messages from DB for conversation context
     messages_for_graph = []
-    rows = get_messages(chat_id)
+    rows = get_messages(chat_id, limit=10)
     # rows is a list of (sender, content)
     for sender, content in rows:
         role = "assistant" if sender == "ai" else "user"
         messages_for_graph.append({"role": role, "content": content})
 
-    messages_for_graph = [message for message in messages_for_graph if message.get("role") == "user"][-1:]
+    # messages_for_graph = [message for message in messages_for_graph if message.get("role") == "user"]
+    # messages_for_graph = messages_for_graph[-2:]
 
     # 4) We want to pass this entire conversation to the graph
     final_answer = ""
@@ -160,14 +164,15 @@ def add_document_to_collection(chat_id: int, file):
         create_collection(collection_name, docs)
 
     create_source(file.name, "", chat_id, source_type="document")
-    os.remove(temp_file_path)
+    with contextlib.suppress(FileNotFoundError):
+        os.remove(temp_file_path)
     st.success(f"Uploaded file: {file.name}")
 
 
 # ========== Streamlit pages ==========
 
 def chats_home():
-    st.title("MitrixGPT (RAG with Milvus + Postgres)")
+    st.title("MitrixGPT Demo")
 
     # Create new chat
     chat_title = st.text_input("Chat Title", placeholder="Enter a name for your new chat")
@@ -261,5 +266,6 @@ def main():
 
 
 if __name__ == "__main__":
+    create_tables()
     st.set_page_config(page_title="MitrixGPT", layout="wide")
     main()

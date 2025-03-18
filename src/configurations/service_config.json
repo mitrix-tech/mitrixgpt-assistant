@@ -1,0 +1,236 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "RAG config schema",
+  "description": "Schema for configuring AI RAG, an intelligent virtual assistant.",
+  "type": "object",
+  "properties": {
+    "llm": {
+      "type": "object",
+      "oneOf": [
+        {
+          "title": "AzureLlm",
+          "type": "object",
+          "properties": {
+            "apiVersion": {
+              "description": "The API version of the Azure OpenAI service to be used.",
+              "type": "string"
+            },
+            "deploymentName": {
+              "description": "The name of the configured deployment model to be used by AI RAG.",
+              "type": "string"
+            },
+            "name": {
+              "description": "The name of the language model (LLM) to be used. Check the Azure OpenAI documentation for available models.",
+              "type": "string"
+            },
+            "type": {
+              "description": "The type of language model to be used by AI RAG for natural language processing and understanding.",
+              "const": "azure",
+              "type": "string"
+            },
+            "url": {
+              "description": "The URL of the Azure OpenAI service to connect with.",
+              "type": "string"
+            },
+            "temperature": {
+              "type": "number",
+              "description": "The temperature parameter for sampling from the language model. A higher value increases the randomness of the generated text.",
+              "default": 0.0
+            }
+          },
+          "required": [
+            "apiVersion",
+            "deploymentName",
+            "name",
+            "type",
+            "url"
+          ]
+        },
+        {
+          "title": "OpenAILlm",
+          "type": "object",
+          "properties": {
+            "type": {
+              "description": "The type of language model to be used by AI RAG for natural language processing and understanding.",
+              "const": "openai",
+              "type": "string"
+            },
+            "name": {
+              "description": "The name of the language model (LLM) to be used. Check the OpenAI documentation for available models.",
+              "type": "string"
+            },
+            "temperature": {
+              "type": "number",
+              "description": "The temperature parameter for sampling from the language model. A higher value increases the randomness of the generated text.",
+              "default": 0.0
+            }
+          },
+          "required": [
+            "name"
+          ]
+        }
+      ]
+    },
+    "tokenizer": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "The name of the tokenizer",
+          "default": "gpt-4o"
+        }
+      },
+      "default": {
+        "name": "gpt-4o"
+      }
+    },
+    "embeddings": {
+      "type": "object",
+      "oneOf": [
+        {
+          "title": "AzureEmbeddings",
+          "properties": {
+            "apiVersion": {
+              "description": "The API version of the Azure OpenAI service to be used.",
+              "type": "string"
+            },
+            "deploymentName": {
+              "description": "The name of the configured deployment model to be used by AI RAG.",
+              "type": "string"
+            },
+            "name": {
+              "type": "string",
+              "description": "The name of the embeddings model to be used by RAG for various tasks such as text representation and similarity."
+            },
+            "type": {
+              "description": "The type of language model to be used by AI RAG for the embeddings generation.",
+              "const": "azure",
+              "type": "string"
+            },
+            "url": {
+              "description": "The URL of the Azure OpenAI service to connect with.",
+              "type": "string"
+            }
+          },
+          "required": [
+            "apiVersion",
+            "deploymentName",
+            "name",
+            "type",
+            "url"
+          ]
+        },
+        {
+          "title": "OpenAIEmbeddings",
+          "properties": {
+            "type": {
+              "description": "The type of language model to be used by AI RAG for the embeddings generation.",
+              "const": "openai",
+              "type": "string"
+            },
+            "name": {
+              "type": "string",
+              "description": "The name of the embeddings model to be used by RAG for various tasks such as text representation and similarity."
+            }
+          },
+          "required": [
+            "name"
+          ]
+        }
+      ]
+    },
+    "vectorStore": {
+      "type": "object",
+      "properties": {
+        "dbName": {
+          "type": "string",
+          "description": "The name of the database where the vector store is hosted."
+        },
+        "collectionName": {
+          "type": "string",
+          "description": "The name of the collection of vectors to be used by RAG for various tasks such as text representation and similarity."
+        },
+        "indexName": {
+          "type": "string",
+          "description": "The name of the index to be used by RAG for various tasks such as text representation and similarity."
+        },
+        "relevanceScoreFn": {
+          "type": "string",
+          "enum": [
+            "Euclid",
+            "Cosine",
+            "Dot"
+          ],
+          "description": "The function used to calculate relevance scores for vectors. Options: 'Euclid', 'Cosine', 'Dot'.",
+          "default": "Cosine"
+        },
+        "embeddingKey": {
+          "type": "string",
+          "description": "The key used to identify embeddings in the vector store."
+        },
+        "textKey": {
+          "type": "string",
+          "description": "The key used to store text data in the vector store."
+        },
+        "maxDocumentsToRetrieve": {
+          "type": "integer",
+          "description": "The maximum number of documents to be retrieved from the vector store.",
+          "default": 4
+        },
+        "maxScoreDistance": {
+          "type": "number",
+          "description": "The maximum score distance for the vectors.",
+          "default": null
+        },
+        "minScoreDistance": {
+          "type": "number",
+          "description": "The maximum score distance for the vectors.",
+          "default": null
+        }
+      },
+      "required": [
+        "collectionName",
+        "indexName",
+        "embeddingKey",
+        "textKey"
+      ]
+    },
+    "chain": {
+      "type": "object",
+      "properties": {
+        "aggregateMaxTokenNumber": {
+          "type": "integer",
+          "description": "The maximum number of tokens to be used for aggregation of multiple responses from different services.",
+          "default": 2000
+        },
+        "rag": {
+          "type": "object",
+          "properties": {
+            "promptsFilePath": {
+              "type": "object",
+              "properties": {
+                "system": {
+                  "type": "string",
+                  "description": "The system prompt to be used for the RAG chain."
+                },
+                "user": {
+                  "type": "string",
+                  "description": "The user prompt to be used for the RAG chain."
+                }
+              }
+            }
+          },
+          "description": "RAG chain configuration"
+        }
+      },
+      "default": {
+        "aggregateMaxTokenNumber": 2000
+      }
+    }
+  },
+  "required": [
+    "llm",
+    "embeddings",
+    "vectorStore"
+  ]
+}

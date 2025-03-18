@@ -1,0 +1,18 @@
+{
+  "llm": {
+    "name": "gpt-4o"
+  },
+  "embeddings": {
+    "name": "text-embedding-3-small"
+  },
+  "vectorStore": {
+    "dbName": "mitrixgpt",
+    "collectionName": "mitrix-data",
+    "indexName": "vector_index",
+    "relevanceScoreFn": "Cosine",
+    "embeddingKey": "embedding",
+    "textKey": "text",
+    "maxDocumentsToRetrieve": 4,
+    "minScoreDistance": 0.6
+  }
+}
