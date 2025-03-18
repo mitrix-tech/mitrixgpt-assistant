@@ -1,6 +1,4 @@
-from http.client import HTTPException
-
-from fastapi import APIRouter, Request, status
+from fastapi import APIRouter, Request, status, HTTPException
 
 from api.schemas.chat_completion_schemas import (
     ChatCompletionInputSchema, ChatCompletionOutputSchema)
@@ -21,7 +19,7 @@ async def chat_completions(request: Request, chat: ChatCompletionInputSchema):
     """
     Handles chat completions by generating responses to user queries, taking into account the context provided in the chat history. Retrieves relevant information from the configured vector store to formulate responses.
     If `chat_id` is supplied, message history will be fetched from DB;
-    otherwise uses the 'chat_history' array from the payload.
+    otherwise uses the `chat_history` array from the payload.
     """
 
     request_context: AppContext = request.state.app_context
@@ -35,7 +33,7 @@ async def chat_completions(request: Request, chat: ChatCompletionInputSchema):
         # Make sure the chat actually exists
         row = sql_storage.read_chat(chat.chat_id)
         if not row:
-            raise HTTPException(status_code=404, detail="Chat ID not found")
+            raise HTTPException(status_code=404, detail="Chat not found")
 
         # Retrieve messages from DB
         db_msgs = sql_storage.get_messages(chat.chat_id)
