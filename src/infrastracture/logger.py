@@ -3,11 +3,10 @@ import os
 import sys
 import time
 import socket
+from pythonjsonlogger.json import JsonFormatter
 
-from pythonjsonlogger import jsonlogger
 
-
-class CustomJsonFormatter(jsonlogger.JsonFormatter):
+class CustomJsonFormatter(JsonFormatter):
     def process_log_record(self, log_record):
         # Rename levelno to level
         log_record['level'] = log_record.pop('levelno')
