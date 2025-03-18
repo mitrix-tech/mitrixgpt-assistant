@@ -1,0 +1,8 @@
+notebooks
+volumes
+storage
+venv
+.github
+.idea
+src/demo/deploy.sh
+.env
