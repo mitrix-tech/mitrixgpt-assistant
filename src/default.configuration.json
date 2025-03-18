@@ -6,9 +6,9 @@
     "name": "text-embedding-3-small"
   },
   "vectorStore": {
-    "dbName": "mitrixgpt-dev",
+    "dbName": "mitrixgpt",
     "collectionName": "mitrix-data",
-    "indexName": "test-data",
+    "indexName": "vector_index",
     "relevanceScoreFn": "Cosine",
     "embeddingKey": "embedding",
     "textKey": "text",

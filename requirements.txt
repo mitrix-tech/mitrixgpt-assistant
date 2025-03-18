@@ -3,11 +3,9 @@ langchain-community==0.3.19
 langchain-experimental==0.3.4
 langchain-text-splitters==0.3.6
 langchain-openai==0.3.7
-langchain-milvus==0.1.8
 langchain-qdrant==0.2.0
 langgraph==0.3.5
 langgraph-checkpoint-postgres==2.0.15
-langgraph-checkpoint-sqlite==2.0.6
 pydantic>=2.7.0,<3.0.0
 beautifulsoup4==4.13.3
 streamlit==1.43.0
@@ -15,3 +13,4 @@ psycopg[binary,pool]==3.2.5
 pypdf==5.3.1
 PyMuPDF==1.25.3
 fastembed==0.6.0
+fastapi[standard]>=0.113.0,<0.114.0

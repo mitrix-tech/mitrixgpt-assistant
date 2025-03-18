@@ -1,6 +1,6 @@
 FROM python:3.11-slim
 
-ENV PORT 3000
+ENV PORT 8501
 
 WORKDIR /app
 
@@ -11,11 +11,16 @@ RUN apt-get update && apt-get install -y \
     git \
     && rm -rf /var/lib/apt/lists/*
 
-ADD  . /app
-
-EXPOSE $PORT
+COPY ./requirements.txt /app
 
 RUN pip install -U pip setuptools
 RUN pip install --no-cache-dir -r requirements.txt
 
-CMD ["python", "-m", "src.app"]
+COPY ./app /app
+
+EXPOSE $PORT
+
+HEALTHCHECK CMD curl --fail http://localhost:8501/_stcore/health
+
+ENTRYPOINT ["streamlit", "run", "app.py", "--server.port=8501", "--server.address=0.0.0.0"]
+# CMD ["python", "-m", "src.app"]

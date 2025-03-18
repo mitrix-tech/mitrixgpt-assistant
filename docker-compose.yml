@@ -1,21 +1,21 @@
 version: '3.7'
 
 services:
-  #  api:
-  #    build: .
-  #    container_name: mirtixgpt-chatserver
-  #    environment:
-  #      PORT: 3000
-  #    ports:
-  #      - '3000:3000'
-  #    restart: "always"
+#  api:
+#    build: .
+#    container_name: mirtixgpt-chatserver
+#    environment:
+#      PORT: 3000
+#    ports:
+#      - '3000:3000'
+#    restart: "always"
   qdrant:
     image: qdrant/qdrant:latest
     ports:
       - "6333:6333"
       - "6334:6334"
     volumes:
-      - ./qdrant_data:/qdrant/storage:z
+      - ./storage/volumes/qdrant_data:/qdrant/storage:z
   postgres:
     image: postgres:15
     container_name: postgres

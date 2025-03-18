@@ -20,53 +20,53 @@ from helpers.vector_search_index_updater import VectorStoreInitializer
 
 
 def create_app(context: AppContext) -> FastAPI:
-    app = FastAPI(
+    application = FastAPI(
         openapi_url="/docs/openapi.json",
         redoc_url=None,
-        title="mitrixgpt"
+        title="mitrixgpt",
+        version="1.0.0"
     )
 
-    app.add_middleware(AppContextMiddleware, app_context=context)
-    app.add_middleware(LoggerMiddleware, logger=context.logger)
+    application.add_middleware(AppContextMiddleware, app_context=context)
+    application.add_middleware(LoggerMiddleware, logger=context.logger)
 
-    app.include_router(liveness_handler.router)
-    app.include_router(readiness_handler.router)
-    app.include_router(checkup_handler.router)
-    app.include_router(metrics_handler.router)
-    app.include_router(chat_handler.router)
-    app.include_router(chat_completions_handler.router)
-    app.include_router(embeddings_handler.router)
+    application.include_router(liveness_handler.router)
+    application.include_router(readiness_handler.router)
+    application.include_router(checkup_handler.router)
+    application.include_router(metrics_handler.router)
+    application.include_router(chat_handler.router)
+    application.include_router(chat_completions_handler.router)
+    application.include_router(embeddings_handler.router)
 
-    return app
+    return application
 
 
-if __name__ == '__main__':
-    logger = get_logger()
-    metrics_manager = MetricsManager()
-    env_vars = get_variables(logger)
-    configurations = get_configuration(env_vars.CONFIGURATION_PATH, logger)
+logger = get_logger()
+metrics_manager = MetricsManager()
+env_vars = get_variables(logger)
+configurations = get_configuration(env_vars.CONFIGURATION_PATH, logger)
 
-    app_context = AppContext(
-        params=AppContextParams(
-            logger=logger,
-            metrics_manager=metrics_manager,
-            env_vars=env_vars,
-            configurations=configurations
-        )
+app_context = AppContext(
+    params=AppContextParams(
+        logger=logger,
+        metrics_manager=metrics_manager,
+        env_vars=env_vars,
+        configurations=configurations
     )
+)
 
-    application = create_app(app_context)
+app = create_app(app_context)
 
-    vector_store_initializer = VectorStoreInitializer(app_context)
-    vector_store_initializer.init_collection()
+vector_store_initializer = VectorStoreInitializer(app_context)
+vector_store_initializer.init_collection()
 
-    # Ensure SQL tables exist:
-    sql_storage = SqlStorage(app_context)
-    sql_storage.create_tables()
+# Ensure SQL tables exist:
+sql_storage = SqlStorage(app_context)
+sql_storage.create_tables()
 
-    uvicorn.run(
-        application,
-        host='0.0.0.0',  # nosec B104 # binding to all interfaces is required to expose the service in containers
-        port=int(app_context.env_vars.PORT),
-        log_level='error'
-    )
+uvicorn.run(
+    app,
+    host='0.0.0.0',  # nosec B104 # binding to all interfaces is required to expose the service in containers
+    port=int(app_context.env_vars.PORT),
+    log_level='error'
+)
