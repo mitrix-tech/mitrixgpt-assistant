@@ -2,6 +2,7 @@
 
 [![Python version](https://img.shields.io/badge/python-v3.12.3-blue)](#)
 [![FastAPI version](https://img.shields.io/badge/fastapi-v0.115.6-blue)](#)
+[![LangChain version](https://img.shields.io/badge/langchain-v0.3.17-blue)](#)
 
 ---
 
