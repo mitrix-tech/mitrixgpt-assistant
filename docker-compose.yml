@@ -5,7 +5,7 @@ services:
     build: .
     container_name: mitrixgpt-chatserver
     env_file:
-      - .env
+      - src/.env
     ports:
       - '3000:3000'
     restart: "always"
