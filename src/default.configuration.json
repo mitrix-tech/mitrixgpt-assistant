@@ -12,7 +12,6 @@
     "relevanceScoreFn": "Cosine",
     "embeddingKey": "embedding",
     "textKey": "text",
-    "maxDocumentsToRetrieve": 4,
-    "minScoreDistance": 0.6
+    "maxDocumentsToRetrieve": 4
   }
 }

@@ -1,5 +1,3 @@
-# helpers/sql_storage.py
-
 import psycopg
 from context import AppContext
 
@@ -13,7 +11,6 @@ class SqlStorage:
     def __init__(self, app_context: AppContext):
         self.app_context = app_context
         self.logger = app_context.logger
-        # We'll retrieve the Postgres connection string from the env vars.
         self.conninfo = self.app_context.env_vars.DB_URI
 
     def get_connection(self) -> psycopg.Connection:
@@ -31,9 +28,6 @@ class SqlStorage:
         """
         with self.get_connection() as conn:
             with conn.cursor() as cur:
-                # Make sure the uuid-ossp extension is available for uuid_generate_v4().
-                # cur.execute('CREATE EXTENSION IF NOT EXISTS "uuid-ossp";')
-
                 # Create table: chat
                 cur.execute("""
                 CREATE TABLE IF NOT EXISTS chat (
