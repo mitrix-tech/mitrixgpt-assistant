@@ -1,5 +1,5 @@
 from typing import Optional
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, AliasChoices
 
 
 class Variables(BaseModel):
@@ -19,6 +19,11 @@ class Variables(BaseModel):
         description='The path to the configuration file for the application.'
     )
     VECTOR_DB_CLUSTER_URI: str = Field(
+        description='The URI for connecting to the Vector DB cluster.'
+    )
+
+    VECTOR_DB_API_KEY: str = Field(
+        validation_alias=AliasChoices('VECTOR_DB_API_KEY', 'QDRANT__SERVICE__API_KEY'),
         description='The URI for connecting to the Vector DB cluster.'
     )
 

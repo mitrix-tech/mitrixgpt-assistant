@@ -210,6 +210,7 @@ curl 'http://localhost:3000/-/metrics'
 docker-compose up --build
 ```
 which spins up the service alongside Postgres/Qdrant containers defined in `docker-compose.yml`.
+*Make sure that `QDRANT__SERVICE__API_KEY` was specified in .env file when running with `docker compose`.*
 
 ---
 
@@ -247,6 +248,7 @@ VECTOR_DB_CLUSTER_URI=http://localhost:6333
 DB_URI=postgres://postgres:postgres@localhost:5432/mitrixgpt
 LLM_API_KEY="<YOUR LLM API KEY>"
 EMBEDDINGS_API_KEY="<YOUR EMBEDDINGS API KEY>"
+VECTOR_DB_API_KEY="<YOUR CUSTOM QDRANT API KEY TO SECURE IN PRODUCTION, CAN BE SPECIFIED AS `QDRANT__SERVICE__API_KEY` INSTEAD>"
 ```
 
 **Key config fields**:
