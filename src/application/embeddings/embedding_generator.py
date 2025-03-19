@@ -5,7 +5,6 @@ from urllib.parse import urlparse
 import requests
 from bs4 import BeautifulSoup
 from langchain_qdrant import QdrantVectorStore, FastEmbedSparse, RetrievalMode
-from qdrant_client import QdrantClient
 
 from application.embeddings.document_chunker import DocumentChunker
 from application.embeddings.hyperlink_parser import HyperlinkParser
@@ -31,10 +30,9 @@ class EmbeddingGenerator:
 
         sparse_embeddings = FastEmbedSparse(model_name="Qdrant/bm25")
 
-        print('configuration.vectorStore.collectionName', configuration.vectorStore.collectionName)
-
         self._embedding_vector_store = QdrantVectorStore.from_existing_collection(
             url=app_context.env_vars.VECTOR_DB_CLUSTER_URI,
+            api_key=app_context.env_vars.VECTOR_DB_API_KEY,
             collection_name=configuration.vectorStore.collectionName,
             embedding=embedding,
             sparse_embedding=sparse_embeddings,

@@ -1,6 +1,7 @@
 from prometheus_client import Counter, generate_latest
 from fastapi import Response
 
+
 class MetricsManager:
     def __init__(self): # TODO: add namespace
         self._embeddings_tokens_consumed = Counter(

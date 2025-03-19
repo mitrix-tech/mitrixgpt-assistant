@@ -70,6 +70,7 @@ class RetrieverChain(Chain):
 
         return QdrantVectorStore.from_existing_collection(
             url=self.context.env_vars.VECTOR_DB_CLUSTER_URI,
+            api_key=self.context.env_vars.QDRANT__SERVICE__API_KEY,
             collection_name=self.configuration.collection_name,
             embedding=self.configuration.embeddings,
             sparse_embedding=sparse_embeddings,
