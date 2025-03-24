@@ -1,0 +1,16 @@
+.terraform.lock.hcl
+**/.terraform/*
+
+# .tfstate files
+*.tfstate
+*.tfstate.*
+
+# .tfplan files
+*.tfplan
+*.tfplan.*
+
+# .DS_Store
+*.DS_Store
+
+.idea
+venv

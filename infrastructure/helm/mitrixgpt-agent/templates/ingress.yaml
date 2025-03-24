@@ -1,0 +1,33 @@
+# apiVersion: networking.k8s.io/v1
+# kind: Ingress
+# metadata:
+#   name: agent-mitrixgpt-agent
+#   namespace: mitrix-tools
+#   labels:
+#     app.kubernetes.io/instance: agent
+#     app.kubernetes.io/managed-by: Helm
+#     app.kubernetes.io/name: mitrixgpt-agent
+#     app.kubernetes.io/version: 1.16.0
+#     helm.sh/chart: mitrixgpt-agent-0.1.0
+#   annotations:
+#     networking.gke.io/healthcheck-path: "/-/healthz"
+#     networking.gke.io/healthcheck-timeout-seconds: "10"
+#     networking.gke.io/healthcheck-interval-seconds: "10"
+#     networking.gke.io/healthcheck-unhealthy-threshold: "3"
+#     networking.gke.io/healthcheck-healthy-threshold: "2"
+#     networking.gke.io/healthcheck-port: "3000"
+#     networking.gke.io/healthcheck-protocol: "HTTP"
+#     networking.gke.io/healthcheck-type: "HTTP"
+#     networking.gke.io/target-proxy-type: "HTTP"
+#     networking.gke.io/internal-load-balancer-allow-global-access: "true"
+# spec:
+#   rules:
+#     - http:
+#         paths:
+#           - path: /*
+#             pathType: ImplementationSpecific
+#             backend:
+#               service:
+#                 name: agent-mitrixgpt-agent
+#                 port:
+#                   number: 3000
