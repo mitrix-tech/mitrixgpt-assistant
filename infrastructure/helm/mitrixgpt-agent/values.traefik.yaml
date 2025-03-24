@@ -1,0 +1,152 @@
+traefik:
+  # securityContext:
+  #   capabilities:
+  #     drop: []
+  #   readOnlyRootFilesystem: false
+  #   allowPrivilegeEscalation: true
+
+  # podSecurityContext:
+  #   runAsUser: 0
+  #   runAsGroup: 0
+  #   runAsNonRoot: false
+  #   persistence:
+  #     enabled: true
+  #     name: data
+  #     accessMode: ReadWriteOnce
+  #     size: 1Gi
+
+  certResolvers:
+    mitrix:
+      email: kkirusha@gmail.com
+      tlsChallenge: true
+      storage: /data/acme.json
+
+  service:
+    enabled: true
+    type: LoadBalancer
+    annotations:
+      cloud.google.com/load-balancer-type: "External"  # Use "Internal" for ILB
+      cloud.google.com/neg: '{"exposed_ports": {"80":{"name": "agent-mitrixgpt-agent-neg-80"}, "443":{"name": "agent-mitrixgpt-agent-neg-443"}}}'  # Enables NEGs
+      cloud.google.com/healthcheck-timeout-seconds: "10"
+      cloud.google.com/healthcheck-interval-seconds: "10"
+      cloud.google.com/healthcheck-unhealthy-threshold: "3"
+      cloud.google.com/healthcheck-healthy-threshold: "2"
+    ports:
+      - name: main
+        port: 80
+        protocol: TCP
+        targetPort: 80
+      - name: https
+        port: 443
+        protocol: TCP
+        targetPort: 443
+      - name: dashboards
+        port: 8080
+        protocol: TCP
+        targetPort: 808
+    spec:
+      externalTrafficPolicy: Local
+
+  resources:
+    requests:
+      cpu: "100m"
+      memory: "256Mi"
+    limits:
+      cpu: "200m"
+      memory: "512Mi"
+
+  deployment:
+    enabled: true
+
+    # initContainers:
+    # - name: init-acme
+    #   image: busybox:latest
+    #   command: ["sh", "-c", "chmod -R 777 /data/"]
+    #   volumeMounts:
+    #     - name: data
+    #       mountPath: /data
+    #   securityContext:
+    #     capabilities:
+    #       drop: []
+    #     readOnlyRootFilesystem: false
+    #     allowPrivilegeEscalation: true
+
+    #     podSecurityContext:
+    #       runAsUser: 0
+    #       runAsGroup: 0
+    #       runAsNonRoot: false
+
+
+  additionalArguments:
+    - "--entrypoints.web.forwardedHeaders.insecure=true"
+    - "--entrypoints.websecure.forwardedHeaders.insecure=true"
+
+  ingressRoute:
+    dashboard:
+      enabled: false
+
+  ports:
+    web:
+      exposedPort: 80
+      exposeInternal: true
+    websecure:
+      exposedPort: 443
+      exposeInternal: true
+    traefik:
+      port: 9000
+
+  providers:
+    file:
+      enabled: true
+      watch: true
+      content: |
+        http:
+          routers:
+            gpt-agent:
+              rule: "Host(`gpt-agent.mitrix.io`)"
+              service: gpt-agent
+              priority: 0
+              tls:
+                certResolver: mitrix
+              middlewares:
+                - secureHeaders
+                - https-redirects
+              entryPoints:
+                - web
+                - websecure
+
+          services:
+            gpt-agent:
+              loadBalancer:
+                servers:
+                  - url: "http://agent-mitrixgpt-agent:3000/"
+
+          middlewares:
+            https-redirects:
+              redirectScheme:
+                scheme: https
+                permanent: true
+                port: "443"
+
+            secureHeaders:
+              headers:
+                accessControlAllowMethods:
+                  - GET
+                  - OPTIONS
+                  - PUT
+                  - POST
+                  - PATCH
+                accessControlAllowHeaders:
+                  - "*"
+                  - "x-client-key"
+                accessControlAllowOriginList:
+                  - "*"
+                accessControlMaxAge: 100
+                addVaryHeader: true
+                frameDeny: true
+                browserXssFilter: true
+                contentTypeNosniff: true
+                forceSTSHeader: true
+                stsIncludeSubdomains: true
+                stsPreload: true
+                stsSeconds: 31536000
