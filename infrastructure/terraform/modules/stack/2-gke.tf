@@ -34,6 +34,10 @@ module "gke" {
     {
       cidr_block   = "68.183.121.224/32"
       display_name = "KKovaliov IP"
+    },
+    {
+      cidr_block   = "84.40.220.61/32"
+      display_name = "KKovaliov IP"
     }
   ]
 
