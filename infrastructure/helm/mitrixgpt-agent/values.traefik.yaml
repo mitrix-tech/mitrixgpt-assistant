@@ -1,19 +1,19 @@
 traefik:
-  # securityContext:
-  #   capabilities:
-  #     drop: []
-  #   readOnlyRootFilesystem: false
-  #   allowPrivilegeEscalation: true
+  securityContext:
+    capabilities:
+      drop: []
+    readOnlyRootFilesystem: false
+    allowPrivilegeEscalation: true
 
-  # podSecurityContext:
-  #   runAsUser: 0
-  #   runAsGroup: 0
-  #   runAsNonRoot: false
-  #   persistence:
-  #     enabled: true
-  #     name: data
-  #     accessMode: ReadWriteOnce
-  #     size: 1Gi
+  podSecurityContext:
+    runAsUser: 0
+    runAsGroup: 0
+    runAsNonRoot: false
+    persistence:
+      enabled: true
+      name: data
+      accessMode: ReadWriteOnce
+      size: 1Gi
 
   certResolvers:
     mitrix:
@@ -119,7 +119,7 @@ traefik:
             gpt-agent:
               loadBalancer:
                 servers:
-                  - url: "http://agent-mitrixgpt-agent:3000/"
+                  - url: "http://agent-mitrixgpt-agent:3000"
 
           middlewares:
             https-redirects:

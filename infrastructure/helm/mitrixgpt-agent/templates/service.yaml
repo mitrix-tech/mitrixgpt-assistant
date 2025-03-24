@@ -10,3 +10,5 @@ spec:
     - port: 3000
       targetPort: 3000
       protocol: TCP
+  selector:
+    {{- include "mitrixgpt-agent.selectorLabels" . | nindent 4 }}

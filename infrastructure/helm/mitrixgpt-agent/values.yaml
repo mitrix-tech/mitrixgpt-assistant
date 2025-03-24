@@ -6,7 +6,7 @@ replicaCount: 1
 
 image:
   repository: europe-west4-docker.pkg.dev/mitrix-tools/mitrixgpt-agent/mitrixgpt-agent
-  pullPolicy: IfNotPresent
+  pullPolicy: Always
   # Overrides the image tag whose default is the chart appVersion.
   tag: "latest"
 
