@@ -4,5 +4,5 @@ storage
 venv
 .github
 .idea
-src/demo/deploy.sh
+demo/deploy.sh
 .env
