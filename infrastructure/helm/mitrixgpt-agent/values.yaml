@@ -6,7 +6,7 @@ replicaCount: 1
 
 image:
   repository: europe-west4-docker.pkg.dev/mitrix-tools/mitrixgpt-agent/mitrixgpt-agent
-  pullPolicy: IfNotPresent
+  pullPolicy: Always
   # Overrides the image tag whose default is the chart appVersion.
   tag: "latest"
 
@@ -54,7 +54,7 @@ env:
     valueFrom:
       secretKeyRef:
         name: mitrix-tools-secrets
-        key: postgres-connection-string
+        key: DB_URI
   - name: CONFIGURATION_PATH
     value: "default.configuration.json"
   - name: LLM_API_KEY
@@ -95,9 +95,8 @@ resources:
     cpu: 100m
     memory: 128Mi
   limits:
-    cpu: 200m
-    memory: 256Mi
-
+    cpu: 500m
+    memory: 1024Mi
 
 livenessProbe:
   httpGet:
