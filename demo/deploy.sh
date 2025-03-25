@@ -1,0 +1,43 @@
+#!/bin/bash
+
+# Configuration
+PROJECT_ID="mitrix-tools"
+SERVICE_NAME="mitrixgpt-demo"
+REGION="europe-central2"
+IMAGE="gcr.io/$PROJECT_ID/$SERVICE_NAME"
+
+# Environment Variables
+ENV_PROJECT_ID="mitrixgpt-demo"
+ENV_REGION="europe-central2"
+OPENAI_API_KEY="${MITRIX_GPT_API_URL:-}"
+# Combine environment variables into a single string
+ENV_VARS="PROJECT_ID=$ENV_PROJECT_ID,REGION=$ENV_REGION,MITRIX_GPT_API_URL=$MITRIX_GPT_API_URL"
+
+# Authenticate with Google Cloud
+echo "Authenticating with Google Cloud..."
+# gcloud auth login
+# gcloud config set project $PROJECT_ID
+
+# Build the container image and submit it to Google Container Registry
+echo "Building the container image..."
+docker build -t $IMAGE:latest .
+
+docker push $IMAGE:latest
+
+# Deploy the container to Cloud Run
+echo "Deploying the container to Cloud Run..."
+gcloud run deploy $SERVICE_NAME \
+  --image $IMAGE \
+  --platform managed \
+  --region $REGION \
+  --set-env-vars $ENV_VARS \
+  --allow-unauthenticated \
+  --min-instances 1 \
+  --max-instances 1 \
+  --cpu 2 \
+  --memory 1Gi \
+  --port 8501
+
+# Print the service URL
+SERVICE_URL=$(gcloud run services describe $SERVICE_NAME --region $REGION --format 'value(status.url)')
+echo "Service deployed to: $SERVICE_URL"

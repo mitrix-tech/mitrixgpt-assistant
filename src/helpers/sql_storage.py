@@ -1,3 +1,5 @@
+from typing import Optional
+
 import psycopg
 from context import AppContext
 
@@ -53,15 +55,26 @@ class SqlStorage:
         self.logger.info("Tables have been created or already exist.")
 
     # -------------- Chat CRUD ---------------
-    def create_chat(self) -> str:
+    def create_chat(self, title: Optional[str] = None) -> str:
         """
-        Inserts a new row into chat, returning the new chat's UUID.
+        Inserts a new row into 'chat', returning the new chat's UUID.
+        If 'title' is provided, store it; otherwise leave it NULL.
         """
         with self.get_connection() as conn:
             with conn.cursor() as cur:
-                sql = "INSERT INTO chat DEFAULT VALUES RETURNING id;"
-                cur.execute(sql)
-                chat_id = cur.fetchone()[0]  # the UUID
+                if title:
+                    # Insert with a title
+                    sql = """
+                        INSERT INTO chat (title)
+                        VALUES (%s)
+                        RETURNING id;
+                    """
+                    cur.execute(sql, (title,))
+                else:
+                    # No title supplied
+                    sql = "INSERT INTO chat DEFAULT VALUES RETURNING id;"
+                    cur.execute(sql)
+                chat_id = cur.fetchone()[0]  # The UUID from RETURNING id
                 return str(chat_id)
 
     def list_chats(self):

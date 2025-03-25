@@ -1,8 +1,9 @@
 from fastapi import APIRouter, Request, HTTPException, status, Query
 from api.schemas.chat_schemas import (
+    CreateChatInputSchema,
     CreateChatOutputSchema,
     ChatOutputSchema,
-    ChatMessagesListOutputSchema
+    ChatMessagesListOutputSchema,
 )
 from helpers.sql_storage import SqlStorage
 from context import AppContext
@@ -10,19 +11,23 @@ from context import AppContext
 router = APIRouter()
 
 
-@router.post("/chat",
-             status_code=status.HTTP_201_CREATED,
-             response_model=CreateChatOutputSchema,
-             tags=["Chat"])
-def create_new_chat(request: Request):
+@router.post(
+    "/chat",
+    status_code=status.HTTP_201_CREATED,
+    response_model=CreateChatOutputSchema,
+    tags=["Chat"]
+)
+def create_new_chat(request: Request, data: CreateChatInputSchema):
     """
     Create a new chat with a new, auto-generated ID (UUID).
+    If 'title' is provided in body, store it in the DB.
     """
     app_context: AppContext = request.state.app_context
     sql_storage = SqlStorage(app_context)
 
-    chat_id = sql_storage.create_chat()
-    app_context.logger.info(f"Created new chat with id {chat_id}")
+    chat_id = sql_storage.create_chat(data.title)
+
+    app_context.logger.info(f"Created new chat with id {chat_id}, title={data.title}")
     return {"chat_id": chat_id}
 
 
