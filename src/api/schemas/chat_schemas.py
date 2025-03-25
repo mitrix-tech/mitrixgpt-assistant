@@ -1,7 +1,15 @@
-from typing import List, Optional
 from datetime import datetime
-from pydantic import BaseModel, field_validator, Field
-from fastapi import HTTPException
+from typing import List, Optional
+
+from pydantic import BaseModel
+
+
+class CreateChatInputSchema(BaseModel):
+    """
+    Request body for creating a new chat.
+    Title is optional.
+    """
+    title: Optional[str] = None
 
 
 class CreateChatOutputSchema(BaseModel):

@@ -26,7 +26,7 @@ def list_chats():
 
 
 def create_chat(title: str = None):
-    resp = requests.post(f"{BASE_URL}/chat", json={})
+    resp = requests.post(f"{BASE_URL}/chat", json={"title": title})
     resp.raise_for_status()
     data = resp.json()
     return data["chat_id"]
