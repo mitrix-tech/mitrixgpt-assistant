@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Request, HTTPException, status, Query
+from fastapi import APIRouter, Request, HTTPException, status, Query, Body
 from api.schemas.chat_schemas import (
     CreateChatInputSchema,
     CreateChatOutputSchema,
@@ -17,17 +17,18 @@ router = APIRouter()
     response_model=CreateChatOutputSchema,
     tags=["Chat"]
 )
-def create_new_chat(request: Request, data: CreateChatInputSchema):
+def create_new_chat(request: Request, data: CreateChatInputSchema | None = None):
     """
     Create a new chat with a new, auto-generated ID (UUID).
     If 'title' is provided in body, store it in the DB.
     """
     app_context: AppContext = request.state.app_context
     sql_storage = SqlStorage(app_context)
+    title = data.title if data is not None else None
 
-    chat_id = sql_storage.create_chat(data.title)
+    chat_id = sql_storage.create_chat(title)
 
-    app_context.logger.info(f"Created new chat with id {chat_id}, title={data.title}")
+    app_context.logger.info(f"Created new chat with id {chat_id}, title={title}")
     return {"chat_id": chat_id}
 
 
