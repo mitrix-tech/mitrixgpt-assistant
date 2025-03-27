@@ -11,3 +11,9 @@ docker build -t  europe-west4-docker.pkg.dev/mitrix-tools/mitrixgpt-agent/mitrix
 # Push image
 docker push  europe-west4-docker.pkg.dev//mitrix-tools/mitrixgpt-agent/mitrixgpt-agent:latest
 ```
+
+# Restart Deployment
+
+```bash
+kubectl rollout restart deployment/agent-mitrixgpt-agent -n mitrix-tools
+```
