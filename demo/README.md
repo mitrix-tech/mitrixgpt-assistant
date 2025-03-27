@@ -6,7 +6,7 @@ A simple Streamlit application that interacts with the MitrixGPT REST API. The a
 
 - Create and manage chats
 - Upload files or links to generate embeddings
-- Send messages and retrieve responses from the MitrixGPT service
+- Send messages and retrieve responses from your MitrixGPT assistant
 
 ## Features
 
@@ -67,9 +67,17 @@ A simple Streamlit application that interacts with the MitrixGPT REST API. The a
 
 ## Deploying to Google Cloud Run
 
-A sample `deploy.sh` script is provided for building and deploying to Google Cloud Run. Steps:
+A sample `deploy.sh.example` script is provided for building and deploying to Google Cloud Run. Steps:
 
 ### Configuration
+
+Create a `deploy.sh` script from existing sample:
+```bash
+mv deploy.sh.example deploy.sh
+```
+
+Configure your GCP project vars:
+
 ```bash
 PROJECT_ID="<YOUR_GCP_PROJECT_ID>"
 SERVICE_NAME="<YOUR_GCP_SERIVCE_NAME>"
