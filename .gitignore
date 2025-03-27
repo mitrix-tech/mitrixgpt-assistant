@@ -170,3 +170,6 @@ cython_debug/
 # Custom configuration files
 *.configuration.json
 !default.configuration.json
+
+# Deployment
+demo/deploy.sh

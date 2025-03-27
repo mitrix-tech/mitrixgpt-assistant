@@ -38,6 +38,10 @@ module "gke" {
     {
       cidr_block   = "84.40.220.61/32"
       display_name = "Artur's IP"
+    },
+    {
+      cidr_block   = "46.171.199.75/32"
+      display_name = "Office IP"
     }
   ]
 

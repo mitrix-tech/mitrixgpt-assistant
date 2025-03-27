@@ -1,4 +1,4 @@
-# mitrixgpt-agent
+# MitrixGPT RAG
 
 [![Python version](https://img.shields.io/badge/python-v3.12.3-blue)](#)
 [![FastAPI version](https://img.shields.io/badge/fastapi-v0.115.6-blue)](#)
@@ -114,7 +114,7 @@ Given an initial `url` (and optional `filterPath`), crawls the domain for text, 
 ```bash
 curl -X POST 'http://localhost:3000/embeddings/generate' \
   -H 'Content-Type: application/json' \
-  --data-raw '{"url":"https://docs.mia-platform.eu/"}'
+  --data-raw '{"url":"https://www.allrecipes.com/recipe/228293/curry-stand-chicken-tikka-masala-sauce/"}'
 ```
 
 **Response** (on success):
@@ -274,7 +274,16 @@ This diagram illustrates the typical flow:
 1. The client issues a request (either a new chat or a chat completion).  
 2. The system retrieves or creates embeddings in Qdrant.  
 3. Chat states (messages) are stored in Postgres if a `chat_id` is used.  
-4. A prompt is sent to the configured LLM (OpenAI, Azure, etc.).  
+4. A prompt is sent to the configured LLM (OpenAI, Azure).  
 5. The response is returned to the server, then to the user.  
 
 ---
+
+## Deployment in GCP
+
+Inside the `infrastructure` folder you can find a terraform config and examples for deployment in GCP.
+
+
+## Demo Application
+
+In `demo` folder you can find a sample demo application made with Streamlit with a separate `README.md` file explaining it's usage and deployment in GCP. 
