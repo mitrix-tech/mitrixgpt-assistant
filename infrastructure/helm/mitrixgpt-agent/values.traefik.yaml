@@ -139,7 +139,7 @@ traefik:
             basic-auth:
               basicAuth:
                 users:
-                  - "mitrix:$2y$05$NWOCd6Fv7VZzY95w/1xUGOsVcpOZq6MlsFr0RSpG8NRRZtEobGV6i"
+                  - "mitrix:$apr1$r0exdzu7$i9WdaBT5t32MeN34wybvr0"
 
             https-redirects:
               redirectScheme:
