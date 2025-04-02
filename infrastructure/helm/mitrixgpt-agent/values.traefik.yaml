@@ -102,10 +102,24 @@ traefik:
       content: |
         http:
           routers:
+            gpt-agent-embeddings:
+              rule: "Host(`gpt-agent.mitrix.io`) && PathPrefix(`/embeddings`)"
+              service: gpt-agent
+              priority: 10
+              tls:
+                certResolver: mitrix
+              middlewares:
+                - secureHeaders
+                - https-redirects
+                - basic-auth
+              entryPoints:
+                - web
+                - websecure
+
             gpt-agent:
               rule: "Host(`gpt-agent.mitrix.io`)"
               service: gpt-agent
-              priority: 0
+              priority: 1
               tls:
                 certResolver: mitrix
               middlewares:
@@ -122,6 +136,11 @@ traefik:
                   - url: "http://agent-mitrixgpt-agent:3000"
 
           middlewares:
+            basic-auth:
+              basicAuth:
+                users:
+                  - "mitrix:$2y$05$NWOCd6Fv7VZzY95w/1xUGOsVcpOZq6MlsFr0RSpG8NRRZtEobGV6i"
+
             https-redirects:
               redirectScheme:
                 scheme: https
