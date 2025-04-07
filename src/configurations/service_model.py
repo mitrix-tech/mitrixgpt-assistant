@@ -133,7 +133,7 @@ class Rag(BaseModel):
 
 class Chain(BaseModel):
     aggregateMaxTokenNumber: Optional[int] = Field(
-        2000,
+        4000,
         description='The maximum number of tokens to be used for aggregation of multiple responses from different services.',
     )
     rag: Optional[Rag] = Field(None, description='RAG chain configuration')
@@ -147,5 +147,5 @@ class RagTemplateConfigSchema(BaseModel):
     embeddings: Union[AzureEmbeddingsConfiguration, OpenAIEmbeddingsConfiguration]
     vectorStore: VectorStore
     chain: Optional[Chain] = Field(
-        default_factory=lambda: Chain.model_validate({'aggregateMaxTokenNumber': 2000})
+        default_factory=lambda: Chain.model_validate({'aggregateMaxTokenNumber': 4000})
     )

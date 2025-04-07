@@ -10,7 +10,7 @@ from context import AppContext
 class AggregateDocsChunksChain(BaseCombineDocumentsChain):
 
     context: AppContext
-    aggregate_max_token_number: int = 2000
+    aggregate_max_token_number: int = 4000
     """The maximum token length of the combined documents, if exceeded a warning will be logged."""
     tokenizer_model_name: str = "gpt-4o"
     """The language model to use for tokenization."""
@@ -32,7 +32,6 @@ class AggregateDocsChunksChain(BaseCombineDocumentsChain):
         return combined_text, {}
 
     def _aggregate_docs_until_token_limit(self, docs):
-        print(self.aggregate_max_token_number)
         combined_text = ''
         token_count = 0
         limit_exceeded = False
