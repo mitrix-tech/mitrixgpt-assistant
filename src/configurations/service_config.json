@@ -201,7 +201,7 @@
         "aggregateMaxTokenNumber": {
           "type": "integer",
           "description": "The maximum number of tokens to be used for aggregation of multiple responses from different services.",
-          "default": 2000
+          "default": 4000
         },
         "rag": {
           "type": "object",
@@ -224,7 +224,7 @@
         }
       },
       "default": {
-        "aggregateMaxTokenNumber": 2000
+        "aggregateMaxTokenNumber": 4000
       }
     }
   },

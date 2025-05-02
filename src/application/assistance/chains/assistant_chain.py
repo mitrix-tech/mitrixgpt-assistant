@@ -3,6 +3,7 @@ from typing import Any, Dict, List, Optional, Type, Union
 from langchain.chains.base import Chain
 from langchain.chains.combine_documents.base import BaseCombineDocumentsChain
 from langchain.chains.llm import LLMChain
+from langchain_core.runnables import RunnablePassthrough
 from langchain.memory import ConversationTokenBufferMemory
 from langchain_core.callbacks import CallbackManagerForChainRun
 from langchain_core.documents import Document
@@ -11,6 +12,7 @@ from langchain_core.messages import BaseMessage
 from langchain_core.prompts import PromptTemplate
 from langchain_core.runnables import Runnable, RunnableConfig, RunnableSequence
 from langchain_core.runnables.utils import create_model
+from langchain_core.output_parsers import StrOutputParser
 from pydantic import BaseModel
 
 from application.assistance.chains.assistant_prompt import AssistantPromptBuilder, AssistantPromptTemplate
@@ -30,7 +32,7 @@ class AssistantChain(Chain):
     chat_history_key: str = "chat_history"  #: :meta private:
     response_key: str = "text"  #: :meta private:
     references_key: str = "input_documents"  #: :meta private:
-    chat_history_max_token_limit: int = 2000
+    chat_history_max_token_limit: int = 4000
     prompt_custom_variables_key: str = "input_custom_variables"  #: :meta private:
 
     @property
@@ -86,7 +88,10 @@ class AssistantChain(Chain):
         if not self.prompt_template:
             self.prompt_template = self._build_default_prompt()
 
-        return LLMChain(prompt=self.prompt_template, llm=self.llm)
+        llm_chain = self.prompt_template | self.llm | StrOutputParser()
+        outer_chain = RunnablePassthrough().assign(text=llm_chain)
+
+        return outer_chain
 
     def _create_chain(self, llm_chain):
         return self.retriever_chain | self.aggregate_docs_chain | llm_chain
