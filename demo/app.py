@@ -7,7 +7,7 @@ import streamlit as st
 # SETTINGS / CONFIG
 # =============================================================================
 
-BASE_URL = os.getenv("COMPANY_GPT_API_URL")
+BASE_URL = os.getenv("ASSISTANT_API_URL")
 
 if "documents_by_chat" not in st.session_state:
     st.session_state["documents_by_chat"] = {}

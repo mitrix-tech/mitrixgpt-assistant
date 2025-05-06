@@ -9,9 +9,9 @@ IMAGE="gcr.io/$PROJECT_ID/$SERVICE_NAME"
 # Environment Variables
 ENV_PROJECT_ID="companygpt-demo"
 ENV_REGION="europe-central2"
-OPENAI_API_KEY="${COMPANY_GPT_API_URL:-}"
+OPENAI_API_KEY="${ASSISTANT_API_URL:-}"
 # Combine environment variables into a single string
-ENV_VARS="PROJECT_ID=$ENV_PROJECT_ID,REGION=$ENV_REGION,COMPANY_GPT_API_URL=$COMPANY_GPT_API_URL"
+ENV_VARS="PROJECT_ID=$ENV_PROJECT_ID,REGION=$ENV_REGION,ASSISTANT_API_URL=$ASSISTANT_API_URL"
 
 # Authenticate with Google Cloud
 echo "Authenticating with Google Cloud..."

@@ -30,7 +30,7 @@ A simple Streamlit application that interacts with the CompanyGPT REST API. The 
 
 - **Python 3.12**
 - [Poetry](https://python-poetry.org/) or `pip` for installing dependencies
-- Access to a CompanyGPT API endpoint, defined by the environment variable `COMPANY_GPT_API_URL`
+- Access to a CompanyGPT API endpoint, defined by the environment variable `ASSISTANT_API_URL`
 - Docker (if you plan to build and deploy the container image)
 - Google Cloud SDK (if deploying to Google Cloud Run)
 
@@ -53,10 +53,10 @@ A simple Streamlit application that interacts with the CompanyGPT REST API. The 
    ```
 
 3. **Set the API URL**  
-   By default, the app uses `COMPANY_GPT_API_URL` from your environment`.  
+   By default, the app uses `ASSISTANT_API_URL` from your environment`.  
    Example:
    ```bash
-   export COMPANY_GPT_API_URL="https://my-custom-gpt-assistant.com/"
+   export ASSISTANT_API_URL="https://my-custom-gpt-assistant.com/"
    ```
 
 4. **Run the Streamlit App**  
@@ -93,7 +93,7 @@ IMAGE="gcr.io/$PROJECT_ID/$SERVICE_NAME"
    ```
 
 2. **Define environment variables**  
-   Make sure `COMPANY_GPT_API_URL` is set in your current shell or passed into the script. If you are using a different variable name, update `deploy.sh` accordingly.
+   Make sure `ASSISTANT_API_URL` is set in your current shell or passed into the script. If you are using a different variable name, update `deploy.sh` accordingly.
 
 3. **Build and Deploy**  
    ```bash
@@ -101,7 +101,7 @@ IMAGE="gcr.io/$PROJECT_ID/$SERVICE_NAME"
    ./deploy.sh
    ```
    - This script builds the Docker image, pushes it to Google Container Registry, and deploys to Cloud Run.
-   - The script also sets environment variables (e.g. `COMPANY_GPT_API_URL`) in the Cloud Run service.
+   - The script also sets environment variables (e.g. `ASSISTANT_API_URL`) in the Cloud Run service.
 
 4. **Check Deployment**  
    After the script completes, it prints a service URL. Open that URL to view the running Streamlit demo.
