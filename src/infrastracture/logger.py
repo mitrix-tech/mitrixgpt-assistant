@@ -21,7 +21,7 @@ class CustomJsonFormatter(JsonFormatter):
         return super().process_log_record(log_record)
 
 
-def get_logger(logger_name='mitrixgptlogger'):
+def get_logger(logger_name='rag-logger'):
     # Clear any existing handlers
     for handler in logging.root.handlers[:]:
         logging.root.removeHandler(handler)

@@ -1,7 +1,7 @@
 resource "google_artifact_registry_repository" "docker_repo" {
   location      = var.region
-  repository_id = "mitrixgpt-agent"
-  description   = "Docker repo for mitrixgpt-agent"
+  repository_id = "companygpt-assistant"
+  description   = "Docker repo for companygpt-assistant"
   format        = "DOCKER"
 }
 

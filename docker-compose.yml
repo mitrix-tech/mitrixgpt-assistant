@@ -3,7 +3,7 @@ version: '3.7'
 services:
   api:
     build: .
-    container_name: mitrixgpt-chatserver
+    container_name: companygpt-chatserver
     env_file:
       - src/.env
     ports:
@@ -27,6 +27,6 @@ services:
     environment:
       POSTGRES_PASSWORD: postgres
       POSTGRES_USER: postgres
-      POSTGRES_DB: mitrixgpt
+      POSTGRES_DB: chatstorage
     volumes:
       - ./storage/volumes/postgres_data:/var/lib/postgresql/data

@@ -1,17 +1,17 @@
-# MitrixGPT Demo
+# CompanyGPT Demo
 [![Python version](https://img.shields.io/badge/streamlit-v1.43.0-blue)](#)
 ---
 
-A simple Streamlit application that interacts with the MitrixGPT REST API. The app allows you to:
+A simple Streamlit application that interacts with the CompanyGPT REST API. The app allows you to:
 
 - Create and manage chats
 - Upload files or links to generate embeddings
-- Send messages and retrieve responses from your MitrixGPT assistant
+- Send messages and retrieve responses from your CompanyGPT assistant
 
 ## Features
 
 - **Create & Delete Chats**  
-  Create a new chat instance, or remove existing ones, managed by the MitrixGPT backend.
+  Create a new chat instance, or remove existing ones, managed by the CompanyGPT backend.
   
 - **Upload Documents**  
   Upload txt, PDF, Markdown to generate embeddings in Knowledge Base. Batch upload supported as .zip, gzip and .tar archives.
@@ -23,14 +23,14 @@ A simple Streamlit application that interacts with the MitrixGPT REST API. The a
   A conversation-like interface, showing user and assistant messages.
 
 - **Error Handling**  
-  The app catches and displays any HTTP errors from the MitrixGPT API (e.g., invalid file types, concurrent embedding tasks, etc.).
+  The app catches and displays any HTTP errors from the CompanyGPT API (e.g., invalid file types, concurrent embedding tasks, etc.).
 
 
 ## Requirements
 
 - **Python 3.12**
 - [Poetry](https://python-poetry.org/) or `pip` for installing dependencies
-- Access to a MitrixGPT API endpoint, defined by the environment variable `MITRIX_GPT_API_URL`
+- Access to a CompanyGPT API endpoint, defined by the environment variable `COMPANY_GPT_API_URL`
 - Docker (if you plan to build and deploy the container image)
 - Google Cloud SDK (if deploying to Google Cloud Run)
 
@@ -38,8 +38,8 @@ A simple Streamlit application that interacts with the MitrixGPT REST API. The a
 
 1. **Clone the Repo**  
    ```bash
-   git clone https://github.com/mitrix-tech/mitrixgpt-agent.git
-   cd mitrixgpt-agent/demo
+   git clone https://github.com/mitrix-tech/mitrixgpt-assistant.git
+   cd mitrixgpt-assistant/demo
    ```
 
 2. **Install Dependencies**  
@@ -53,10 +53,10 @@ A simple Streamlit application that interacts with the MitrixGPT REST API. The a
    ```
 
 3. **Set the API URL**  
-   By default, the app uses `MITRIX_GPT_API_URL` from your environment`.  
+   By default, the app uses `COMPANY_GPT_API_URL` from your environment`.  
    Example:
    ```bash
-   export MITRIX_GPT_API_URL="https://my-custom-gpt-agent.com/"
+   export COMPANY_GPT_API_URL="https://my-custom-gpt-assistant.com/"
    ```
 
 4. **Run the Streamlit App**  
@@ -93,7 +93,7 @@ IMAGE="gcr.io/$PROJECT_ID/$SERVICE_NAME"
    ```
 
 2. **Define environment variables**  
-   Make sure `MITRIX_GPT_API_URL` is set in your current shell or passed into the script. If you are using a different variable name, update `deploy.sh` accordingly.
+   Make sure `COMPANY_GPT_API_URL` is set in your current shell or passed into the script. If you are using a different variable name, update `deploy.sh` accordingly.
 
 3. **Build and Deploy**  
    ```bash
@@ -101,7 +101,7 @@ IMAGE="gcr.io/$PROJECT_ID/$SERVICE_NAME"
    ./deploy.sh
    ```
    - This script builds the Docker image, pushes it to Google Container Registry, and deploys to Cloud Run.
-   - The script also sets environment variables (e.g. `MITRIX_GPT_API_URL`) in the Cloud Run service.
+   - The script also sets environment variables (e.g. `COMPANY_GPT_API_URL`) in the Cloud Run service.
 
 4. **Check Deployment**  
    After the script completes, it prints a service URL. Open that URL to view the running Streamlit demo.

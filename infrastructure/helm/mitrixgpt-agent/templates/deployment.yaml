@@ -1,16 +1,16 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "mitrixgpt-agent.fullname" . }}
+  name: {{ include "companygpt-assistant.fullname" . }}
   labels:
-    {{- include "mitrixgpt-agent.labels" . | nindent 4 }}
+    {{- include "companygpt-assistant.labels" . | nindent 4 }}
 spec:
   {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
   {{- end }}
   selector:
     matchLabels:
-      {{- include "mitrixgpt-agent.selectorLabels" . | nindent 6 }}
+      {{- include "companygpt-assistant.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       {{- with .Values.podAnnotations }}
@@ -18,7 +18,7 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
-        {{- include "mitrixgpt-agent.labels" . | nindent 8 }}
+        {{- include "companygpt-assistant.labels" . | nindent 8 }}
         {{- with .Values.podLabels }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
@@ -27,7 +27,7 @@ spec:
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      serviceAccountName: {{ include "mitrixgpt-agent.serviceAccountName" . }}
+      serviceAccountName: {{ include "companygpt-assistant.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:

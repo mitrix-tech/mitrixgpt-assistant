@@ -6,14 +6,14 @@
 gcloud auth configure-docker europe-west4-docker.pkg.dev
 
 # Biuld image
-docker build -t  europe-west4-docker.pkg.dev/mitrix-tools/mitrixgpt-agent/mitrixgpt-agent:latest .
+docker build -t  europe-west4-docker.pkg.dev/company-tools/companygpt-assistant/companygpt-assistant:latest .
 
 # Push image
-docker push  europe-west4-docker.pkg.dev//mitrix-tools/mitrixgpt-agent/mitrixgpt-agent:latest
+docker push  europe-west4-docker.pkg.dev/company-tools/companygpt-assistant/companygpt-assistant:latest
 ```
 
 # Restart Deployment
 
 ```bash
-kubectl rollout restart deployment/agent-mitrixgpt-agent -n mitrix-tools
+kubectl rollout restart deployment/assistant-companygpt-assistant -n company-tools
 ```

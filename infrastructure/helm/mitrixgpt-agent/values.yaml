@@ -1,11 +1,11 @@
-# Default values for mitrixgpt-agent.
+# Default values for companygpt-assistant.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
 replicaCount: 1
 
 image:
-  repository: europe-west4-docker.pkg.dev/mitrix-tools/mitrixgpt-agent/mitrixgpt-agent
+  repository: europe-west4-docker.pkg.dev/company-tools/companygpt-assistant/companygpt-assistant
   pullPolicy: Always
   # Overrides the image tag whose default is the chart appVersion.
   tag: "latest"
@@ -53,31 +53,31 @@ env:
   - name: DB_URI
     valueFrom:
       secretKeyRef:
-        name: mitrix-tools-secrets
+        name: company-tools-secrets
         key: DB_URI
   - name: CONFIGURATION_PATH
     value: "default.configuration.json"
   - name: LLM_API_KEY
     valueFrom:
       secretKeyRef:
-        name: mitrix-tools-secrets
+        name: company-tools-secrets
         key: LLM_API_KEY
   - name: EMBEDDINGS_API_KEY
     valueFrom:
       secretKeyRef:
-        name: mitrix-tools-secrets
+        name: company-tools-secrets
         key: EMBEDDINGS_API_KEY
   - name: QDRANT__SERVICE__API_KEY
     valueFrom:
       secretKeyRef:
-        name: mitrix-tools-secrets
+        name: company-tools-secrets
         key: QDRANT__SERVICE__API_KEY
 
 ingress:
   enabled: true
   className: ""
   annotations:
-    alb.ingress.kubernetes.io/load-balancer-name: mitrixgpt-agent-dev-alb
+    alb.ingress.kubernetes.io/load-balancer-name: companygpt-assistant-dev-alb
     alb.ingress.kubernetes.io/scheme: internet-facing
     alb.ingress.kubernetes.io/target-type: ip
     alb.ingress.kubernetes.io/manage-backend-security-group-rules: "true"

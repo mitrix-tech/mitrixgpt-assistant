@@ -1,4 +1,4 @@
-# MitrixGPT RAG
+# MitrixGPT Assistant
 
 [![Python version](https://img.shields.io/badge/python-v3.12.3-blue)](#)
 [![FastAPI version](https://img.shields.io/badge/fastapi-v0.115.6-blue)](#)
@@ -6,7 +6,8 @@
 
 ---
 
-**mitrixgpt-agent** is a Retrieval Augmented Generation (RAG) system, providing a RESTful API server that integrates a Qdrant vector database for embeddings storage and PostgreSQL for chat history storage. The service uses [LangChain](https://python.langchain.com/) to orchestrate advanced workflows with Large Language Models (LLMs) and is built with the [FastAPI](https://fastapi.tiangolo.com/) framework.
+**mitrixgpt-assistant** is a Retrieval Augmented Generation (RAG) system, providing a RESTful API server that integrates a Qdrant vector database for embeddings storage and PostgreSQL for chat history storage. The service uses [LangChain](https://python.langchain.com/) to orchestrate advanced workflows with Large Language Models (LLMs) and is built with the [FastAPI](https://fastapi.tiangolo.com/) framework.
+This is a template project with basic RAG assistant functionality, that can be adjusted according to a particular business needs.
 
 ## Table of Contents
 
@@ -25,14 +26,13 @@
 
 ## Overview
 
-`mitrixgpt-agent` exposes endpoints to:
+`mitrixgpt-assistant` exposes endpoints to:
 - **Chat Completions**: Converse with a knowledge-augmented assistant.
 - **Chat Management**: Store/retrieve messages from PostgreSQL using a UUID-based chat identifier.  
 - **Embeddings**: Generate embeddings from URLs or uploaded files for subsequent retrieval in Qdrant.
 - **Metrics**: Observe usage metrics in Prometheus format.
 
 When running the service, you can explore all the endpoints via **Swagger UI** at `http://localhost:3000/docs`.
-
 ---
 
 ## Endpoints
@@ -149,16 +149,20 @@ curl 'http://localhost:3000/-/metrics'
 
 1. **Clone the Repo & Setup**  
    ```bash
-   git clone https://github.com/mitrix-tech/mitrixgpt-agent.git
-   cd mitrixgpt-agent
+   git clone https://github.com/mitrix-tech/mitrixgpt-assistant.git
+   cd mitrixgpt-assistant
    ```
 
-2. **Create `.env` File**  
+2. **Create `.env` File and Configurations**  
    Copy the sample environment file and update your credentials:
    ```bash
    cp src/default.env src/.env
    ```
    Adjust `DB_URI`, `VECTOR_DB_CLUSTER_URI`, `LLM_API_KEY`, and so on.
+   
+   The project uses pydantic models to configure environment variables, see `src/configurations/`.
+   You may adjust `src/default.configuration.json`, and `src/configurations/service_config.json`
+   Provide your system/user prompt filepaths, or set `DEFAULT_SYSTEM_TEMPLATE`, `DEFAULT_USER_TEMPLATE` in `src/application/assistance/chains/assistant_prompt.py`.
 
 3. **Install Dependencies**  
    - Create and activate a Python virtual environment:
@@ -194,7 +198,7 @@ curl 'http://localhost:3000/-/metrics'
 
 1. **Build your image**  
    ```bash
-   docker build . -t mitrixgpt-agent
+   docker build . -t rag-assistant
    ```
 
 2. **Run with Docker**  
@@ -202,7 +206,7 @@ curl 'http://localhost:3000/-/metrics'
    docker run \
      -p 3000:3000 \
      --env-file ./src/.env \
-     -d mitrixgpt-agent
+     -d rag-assistant
    ```
    This starts the container on port **3000**. 
 
@@ -228,8 +232,8 @@ The service uses a JSON configuration file (default path specified by `CONFIGURA
     "name": "text-embedding-3-small"
   },
   "vectorStore": {
-    "dbName": "mitrixgpt",
-    "collectionName": "mitrix-data",
+    "dbName": "rag-db",
+    "collectionName": "rag-data",
     "indexName": "vector_index",
     "relevanceScoreFn": "Cosine",
     "embeddingKey": "embedding",
@@ -246,7 +250,7 @@ PORT=3000
 LOG_LEVEL=DEBUG
 CONFIGURATION_PATH=default.configuration.json
 VECTOR_DB_CLUSTER_URI=http://localhost:6333
-DB_URI=postgres://postgres:postgres@localhost:5432/mitrixgpt
+DB_URI=postgres://postgres:postgres@localhost:5432/chatstorage
 LLM_API_KEY="<YOUR LLM API KEY>"
 EMBEDDINGS_API_KEY="<YOUR EMBEDDINGS API KEY>"
 VECTOR_DB_API_KEY="<YOUR CUSTOM QDRANT API KEY TO SECURE IN PRODUCTION, CAN BE SPECIFIED AS `QDRANT__SERVICE__API_KEY` INSTEAD>"

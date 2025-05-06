@@ -7,7 +7,7 @@ import streamlit as st
 # SETTINGS / CONFIG
 # =============================================================================
 
-BASE_URL = os.getenv("MITRIX_GPT_API_URL")
+BASE_URL = os.getenv("COMPANY_GPT_API_URL")
 
 if "documents_by_chat" not in st.session_state:
     st.session_state["documents_by_chat"] = {}
@@ -140,7 +140,7 @@ def handle_http_error(ex: requests.exceptions.HTTPError):
 # =============================================================================
 
 def chats_home():
-    st.title("MitrixGPT Demo")
+    st.title("CompanyGPT Demo")
 
     chat_title = st.text_input("Chat Title", placeholder="Enter a name for your new chat")
     if st.button("Create Chat"):
@@ -301,5 +301,5 @@ def main():
 
 
 if __name__ == "__main__":
-    st.set_page_config(page_title="MitrixGPT", layout="wide")
+    st.set_page_config(page_title="CompanyGPT", layout="wide")
     main()

@@ -16,7 +16,7 @@ traefik:
       size: 1Gi
 
   certResolvers:
-    mitrix:
+    company:
       email: kkirusha@gmail.com
       tlsChallenge: true
       storage: /data/acme.json
@@ -26,7 +26,7 @@ traefik:
     type: LoadBalancer
     annotations:
       cloud.google.com/load-balancer-type: "External"  # Use "Internal" for ILB
-      cloud.google.com/neg: '{"exposed_ports": {"80":{"name": "agent-mitrixgpt-agent-neg-80"}, "443":{"name": "agent-mitrixgpt-agent-neg-443"}}}'  # Enables NEGs
+      cloud.google.com/neg: '{"exposed_ports": {"80":{"name": "assistant-companygpt-assistant-neg-80"}, "443":{"name": "assistant-companygpt-assistant-neg-443"}}}'  # Enables NEGs
       cloud.google.com/healthcheck-timeout-seconds: "10"
       cloud.google.com/healthcheck-interval-seconds: "10"
       cloud.google.com/healthcheck-unhealthy-threshold: "3"
@@ -102,12 +102,12 @@ traefik:
       content: |
         http:
           routers:
-            gpt-agent-embeddings:
-              rule: "Host(`gpt-agent.mitrix.io`) && PathPrefix(`/embeddings`)"
-              service: gpt-agent
+            gpt-assistant-embeddings:
+              rule: "Host(`gpt-assistant.company.io`) && PathPrefix(`/embeddings`)"
+              service: gpt-assistant
               priority: 10
               tls:
-                certResolver: mitrix
+                certResolver: company
               middlewares:
                 - secureHeaders
                 - https-redirects
@@ -116,12 +116,12 @@ traefik:
                 - web
                 - websecure
 
-            gpt-agent:
-              rule: "Host(`gpt-agent.mitrix.io`)"
-              service: gpt-agent
+            gpt-assistant:
+              rule: "Host(`gpt-assistant.company.io`)"
+              service: gpt-assistant
               priority: 1
               tls:
-                certResolver: mitrix
+                certResolver: company
               middlewares:
                 - secureHeaders
                 - https-redirects
@@ -130,16 +130,16 @@ traefik:
                 - websecure
 
           services:
-            gpt-agent:
+            gpt-assistant:
               loadBalancer:
                 servers:
-                  - url: "http://agent-mitrixgpt-agent:3000"
+                  - url: "http://assistant-companygpt-assistant:3000"
 
           middlewares:
             basic-auth:
               basicAuth:
                 users:
-                  - "mitrix:$apr1$r0exdzu7$i9WdaBT5t32MeN34wybvr0"
+                  - "company:$apr1$r0exdzu7$i9WdaBT5t32MeN34wybvr0"
 
             https-redirects:
               redirectScheme:

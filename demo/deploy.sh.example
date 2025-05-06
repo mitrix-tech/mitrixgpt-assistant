@@ -1,17 +1,17 @@
 #!/bin/bash
 
 # Configuration
-PROJECT_ID="mitrix-tools"
-SERVICE_NAME="mitrixgpt-demo"
+PROJECT_ID="company-tools"
+SERVICE_NAME="companygpt-demo"
 REGION="europe-central2"
 IMAGE="gcr.io/$PROJECT_ID/$SERVICE_NAME"
 
 # Environment Variables
-ENV_PROJECT_ID="mitrixgpt-demo"
+ENV_PROJECT_ID="companygpt-demo"
 ENV_REGION="europe-central2"
-OPENAI_API_KEY="${MITRIX_GPT_API_URL:-}"
+OPENAI_API_KEY="${COMPANY_GPT_API_URL:-}"
 # Combine environment variables into a single string
-ENV_VARS="PROJECT_ID=$ENV_PROJECT_ID,REGION=$ENV_REGION,MITRIX_GPT_API_URL=$MITRIX_GPT_API_URL"
+ENV_VARS="PROJECT_ID=$ENV_PROJECT_ID,REGION=$ENV_REGION,COMPANY_GPT_API_URL=$COMPANY_GPT_API_URL"
 
 # Authenticate with Google Cloud
 echo "Authenticating with Google Cloud..."

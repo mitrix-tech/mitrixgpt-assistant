@@ -6,8 +6,8 @@
     "name": "text-embedding-3-small"
   },
   "vectorStore": {
-    "dbName": "mitrixgpt",
-    "collectionName": "mitrix-data",
+    "dbName": "rag-db",
+    "collectionName": "rag-data",
     "indexName": "vector_index",
     "relevanceScoreFn": "Cosine",
     "embeddingKey": "embedding",

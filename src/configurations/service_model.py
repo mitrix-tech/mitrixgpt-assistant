@@ -88,7 +88,7 @@ class VectorStore(BaseModel):
         None, description='The name of the database where the vector store is hosted.'
     )
     collectionName: str = Field(
-        'mitrix-data',
+        'rag-data',
         description='The name of the collection of vectors to be used by RAG for various tasks such as text representation and similarity.',
     )
     indexName: str = Field(

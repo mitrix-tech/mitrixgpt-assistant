@@ -1,6 +1,6 @@
 terraform {
   backend "gcs" {
-    bucket = "mitrix-gcp-tf-state"
+    bucket = "company-gcp-tf-state"
     prefix = "terraform/state"
   }
 

@@ -1,14 +1,14 @@
 # apiVersion: networking.k8s.io/v1
 # kind: Ingress
 # metadata:
-#   name: agent-mitrixgpt-agent
-#   namespace: mitrix-tools
+#   name: assistant-companygpt-assistant
+#   namespace: company-tools
 #   labels:
-#     app.kubernetes.io/instance: agent
+#     app.kubernetes.io/instance: assistant
 #     app.kubernetes.io/managed-by: Helm
-#     app.kubernetes.io/name: mitrixgpt-agent
+#     app.kubernetes.io/name: companygpt-assistant
 #     app.kubernetes.io/version: 1.16.0
-#     helm.sh/chart: mitrixgpt-agent-0.1.0
+#     helm.sh/chart: companygpt-assistant-0.1.0
 #   annotations:
 #     networking.gke.io/healthcheck-path: "/-/healthz"
 #     networking.gke.io/healthcheck-timeout-seconds: "10"
@@ -28,6 +28,6 @@
 #             pathType: ImplementationSpecific
 #             backend:
 #               service:
-#                 name: agent-mitrixgpt-agent
+#                 name: assistant-companygpt-assistant
 #                 port:
 #                   number: 3000

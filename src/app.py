@@ -23,7 +23,7 @@ def create_app(context: AppContext) -> FastAPI:
     application = FastAPI(
         openapi_url="/docs/openapi.json",
         redoc_url=None,
-        title="mitrixgpt",
+        title="companygpt-rag-template",
         version="1.0.0"
     )
 

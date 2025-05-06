@@ -38,7 +38,7 @@ global:
       postgresPassword: ""
       username: ""
       password: ""
-      database: "mitrixgpt"
+      database: "companygpt"
       existingSecret: ""
       secretKeys:
         adminPasswordKey: ""
@@ -155,7 +155,7 @@ auth:
   password: ""
   ## @param auth.database Name for a custom database to create
   ##
-  database: "mitrixgpt"
+  database: "companygpt"
   ## @param auth.replicationUsername Name of the replication user
   ##
   replicationUsername: repl_user

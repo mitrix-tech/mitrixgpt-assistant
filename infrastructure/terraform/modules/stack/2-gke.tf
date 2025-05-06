@@ -10,7 +10,7 @@ module "gke" {
   source                          = "terraform-google-modules/kubernetes-engine/google//modules/beta-autopilot-private-cluster"
   version                         = "~> 27.0.0"
   project_id                      = var.project_id
-  name                            = "mitrix-tools-${var.environment}-cluster"
+  name                            = "company-tools-${var.environment}-cluster"
   regional                        = true
   region                          = var.region
   network                         = module.gcp-network.network_name
